@@ -20,10 +20,51 @@ class AppointmentPage {
         return cy.get('#txt-password');
     }
 
-    static get setPassword()
+    static get selectFacility()
     {
-        return cy.get('#txt-password');
+        return cy.get("select#combo_facility");
     }
+
+    static get checkHospital()
+    {
+        return cy.get("[name='hospital_readmission']");
+    }
+
+    static get checkMedicaid()
+    {
+        return cy.get("#radio_program_medicaid");
+    }
+
+    static get selectDate()
+    {
+        return cy.get(".datepicker-days .day:not(.old)");
+    }
+
+    static get setComment()
+    {
+        return cy.get("#txt_comment");
+    }
+
+    static get setComment()
+    {
+        return cy.get("#txt_comment");
+    }
+
+    static get clickAppointment()
+    {
+        return cy.contains("Book Appointment");
+    }
+
+    static get clickMenu()
+    {
+        return cy.get("#menu-toggle");
+    }
+
+    static get clickHistory()
+    {
+        return cy.contains("History");
+    }
+
 }
 
 export default AppointmentPage;

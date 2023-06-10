@@ -1,6 +1,6 @@
 import AppointmentPage from "../pageObjects/AppointmentPage";
 
-describe('Appointment Scenarios', () => {
+describe('Appointment scenāriji', () => {
   beforeEach(() => {
     AppointmentPage.visit();
   });
@@ -13,16 +13,17 @@ describe('Appointment Scenarios', () => {
     AppointmentPage.setPassword.type('ThisIsNotAPassword');
     cy.get('button#btn-login').click();
 
-    cy.get("select#combo_facility").select("Seoul CURA Healthcare Center");
-    cy.get("[name='hospital_readmission']").check();
-    cy.get("#radio_program_medicaid").check();
+    // aizpilda vajadzīgo info
+    AppointmentPage.selectFacility.select("Seoul CURA Healthcare Center");
+    AppointmentPage.checkHospital.check();
+    AppointmentPage.checkMedicaid.check();
 
     cy.get("#txt_visit_date").click();
-    cy.get(".datepicker-days .day:not(.old)").contains("30").click();
-    cy.get("#txt_comment").type("CURA Healthcare Service");
-    cy.contains("Book Appointment").click();
+    AppointmentPage.selectDate.contains("30").click();
+    AppointmentPage.setComment.type("CURA Healthcare Service");
+    AppointmentPage.clickAppointment.click();
 
-    // Validate previously set values
+    // validē info
     cy.get("#facility").should("contain.text", "Seoul CURA Healthcare Center");
     cy.get("#hospital_readmission").should("contain.text", "Yes");
     cy.get("#program").should("contain.text", "Medicaid");
@@ -30,16 +31,22 @@ describe('Appointment Scenarios', () => {
     cy.get("#comment").should("contain.text", "CURA Healthcare Service");
   });
 
+
   it("Scenario 2 - Appointment history empty", () => {
+
     cy.contains("Make Appointment").click();
-    cy.get("#txt-username").type("John Doe");
-    cy.get("#txt-password").type("ThisIsNotAPassword");
+    AppointmentPage.setName.type('John Doe');
+    AppointmentPage.setPassword.type('ThisIsNotAPassword');
     cy.get('button#btn-login').click();
 
-    cy.get("#menu-toggle").click();
+    // nospiež un validē sidebar
+    AppointmentPage.clickMenu.click();
     cy.get(".sidebar-nav").should("be.visible");
+    
+    // nospiež History
+    AppointmentPage.clickHistory.click();
 
-    cy.contains("History").click();
+    // validē ka no appointment ir redzams
     cy.contains("No appointment").should("be.visible");
   });
 });
