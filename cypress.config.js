@@ -5,7 +5,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    baseUrl: "https://demoqa.com",
+    baseUrl: "https://katalon-demo-cura.herokuapp.com/",
     viewportWidth: 1440,
     viewportHeight: 1340,
   },

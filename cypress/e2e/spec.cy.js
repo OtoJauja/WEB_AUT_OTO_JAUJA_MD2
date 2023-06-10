@@ -1,25 +1,45 @@
-import SelectPage from "../pageObjects/SelectPage";
+import AppointmentPage from "../pageObjects/AppointmentPage";
 
-describe('Select grid', () => {
+describe('Appointment Scenarios', () => {
   beforeEach(() => {
-    SelectPage.visit();
+    AppointmentPage.visit();
   });
 
-  it('Clicks and validates if highlited or not', () => {
-    // izveido masivu ar pogām kuras nospiedīs
-    const selected = ['Two', 'Four', 'Six', 'Eight'];
-    const unselected = ['One', 'Three', 'Five', 'Seven', 'Nine'];
+  it('Scenario 1 - Make an Appointment', () => {
+    cy.contains('Make Appointment').click();
 
-    // pasauc metodi kas aizved uz grid
-    SelectPage.selectGrid.click();
-    
-    // pasauc metodi kas nospiež katru vajadzīgo pogu
-    SelectPage.selectNumber(selected);
+    // ievada login info un nospiež login
+    AppointmentPage.setName.type('John Doe');
+    AppointmentPage.setPassword.type('ThisIsNotAPassword');
+    cy.get('button#btn-login').click();
 
-    // pasauc metodi kas validē kas ir highlited
-    SelectPage.validateSelected(selected);
+    cy.get("select#combo_facility").select("Seoul CURA Healthcare Center");
+    cy.get("[name='hospital_readmission']").check();
+    cy.get("#radio_program_medicaid").check();
 
-    // pasauc metodi kas validē kas nav highlited
-    SelectPage.validateUnselected(unselected);
+    cy.get("#txt_visit_date").click();
+    cy.get(".datepicker-days .day:not(.old)").contains("30").click();
+    cy.get("#txt_comment").type("CURA Healthcare Service");
+    cy.contains("Book Appointment").click();
+
+    // Validate previously set values
+    cy.get("#facility").should("contain.text", "Seoul CURA Healthcare Center");
+    cy.get("#hospital_readmission").should("contain.text", "Yes");
+    cy.get("#program").should("contain.text", "Medicaid");
+    cy.get("#visit_date").should("contain.text", "30/06/2023");
+    cy.get("#comment").should("contain.text", "CURA Healthcare Service");
+  });
+
+  it("Scenario 2 - Appointment history empty", () => {
+    cy.contains("Make Appointment").click();
+    cy.get("#txt-username").type("John Doe");
+    cy.get("#txt-password").type("ThisIsNotAPassword");
+    cy.get('button#btn-login').click();
+
+    cy.get("#menu-toggle").click();
+    cy.get(".sidebar-nav").should("be.visible");
+
+    cy.contains("History").click();
+    cy.contains("No appointment").should("be.visible");
   });
 });
